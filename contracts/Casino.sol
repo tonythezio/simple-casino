@@ -19,6 +19,11 @@ contract Casino {
     // The Number that each Player has placed Bet
     mapping(address => uint) playerBetsNumber;
 
+    // Set Contract owner Address
+    constructor() {
+        owner = msg.sender;
+    }
+
    // Modifier to only allow the execution of selectWinner() when the Bets are Completed
     modifier onBetEnd() {
         if(numberOfBets >= maxNumberOfBets) _;
@@ -35,7 +40,7 @@ contract Casino {
             delete numberBetPlayers[i]; // Delete Array values from Players in each Number Array
         }
 
-        numberOfBets = 0; // total Number of Bets Placed in the current Bet Round
+        numberOfBets = 0; // Total Number of Bets Placed in the current Bet Round
         totalAmountStaked = 0; // Total Amount Staked in the current Bet Round
     }
     
@@ -48,9 +53,11 @@ contract Casino {
          // Set the Number Bet for that Player
         playerBetsNumber[msg.sender] = _betNumber;
 
-        // The player msg.sender has placed Bet for that Number
+        // The Player msg.sender has placed Bet for that Number
         numberBetPlayers[_betNumber].push(msg.sender);
 
+        // Add Player Address to Players Address Array
+        players.push(msg.sender);
 
         numberOfBets++; // Increament total number of Bets in the current Round
         totalAmountStaked += msg.value; // Add current Bet Amount to Total Amount Staked in the current Round
@@ -64,7 +71,7 @@ contract Casino {
     }
 
     // Select Winner and Transfer Prize Amount
-    function selectWinner() public onBetEnd {
+    function selectWinner() internal onBetEnd {
         uint256 winningNumber = getRandomNumber() % 10; // Winning Number of the current round
 
         // Splits Prize among all the Winners
