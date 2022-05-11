@@ -13,11 +13,11 @@ contract Casino {
 
     address[] public players;
 
-    // Each Number has an Array of Players who selected that Number
-    mapping(uint => address[]) numberBetPlayers;
-
     // The Number that each Player has placed Bet
     mapping(address => uint) playerBetsNumber;
+
+    // Each Number has an Array of Players who selected that Number
+    mapping(uint => address[]) numberBetPlayers;
 
     // Set Contract owner Address
     constructor() {
